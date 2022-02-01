@@ -8,31 +8,81 @@ const optionBtns = document.querySelectorAll(".option-btn");
 
 // Presets
 
-const timersSettings = [
-  { id: "pomodoro", time: 1500, classe: "red" },
-  { id: "shortBreak", time: 300, classe: "green" },
-  { id: "longBreak", time: 900, classe: "blue" },
-];
+const timersSettings = {
+  pomodoro: {
+    time: 10, //1500
+    classe: "red",
+  },
+  shortBreak: {
+    time: 5, // 300
+    classe: "green",
+  },
+  longBreak: {
+    time: 7, // 900
+    classe: "blue",
+  },
+};
 
-let currentTimer;
-let definedTime = timersSettings.find(
-  (timerSetting) => timerSetting.id === "pomodoro"
-).time;
-let timerIsRunning = false;
+let currentTimerInterval,
+  currentTimerSetting,
+  definedTime,
+  timerIsRunning,
+  round,
+  maxRound;
 
 // Functions
 
+const init = function () {
+  currentTimerSetting = timersSettings.pomodoro;
+  definedTime = currentTimerSetting.time;
+  timerIsRunning = false;
+  round = 0;
+  maxRound = 4;
+};
+
+init();
+
+const updateTimerEl = function () {
+  const min = String(Math.trunc(definedTime / 60)).padStart(2, 0);
+  const sec = String(Math.trunc(definedTime % 60)).padStart(2, 0);
+  timerEl.innerHTML = `${min}:${sec}`;
+};
+
+const resetTimer = function () {
+  clearInterval(currentTimerInterval);
+  timerIsRunning = false;
+  playPause.innerHTML = "PLAY";
+  container.classList.remove("red", "green", "blue");
+  optionBtns.forEach((btn) => btn.classList.remove("active-option-btn"));
+};
+
+const changeTimerInterface = function (id) {
+  currentTimerSetting = timersSettings[id];
+  definedTime = timersSettings[id].time;
+  document.getElementById(`${id}`).classList.add("active-option-btn");
+  container.classList.add(timersSettings[id].classe);
+  updateTimerEl();
+};
+
 const startTimer = function () {
   const tick = function () {
-    const min = String(Math.trunc(definedTime / 60)).padStart(2, 0);
-    const sec = String(Math.trunc(definedTime % 60)).padStart(2, 0);
+    definedTime--;
+    updateTimerEl();
 
     if (definedTime === 0) {
-      clearInterval(timer);
+      resetTimer();
+      if (currentTimerSetting === timersSettings.pomodoro) {
+        round++;
+        if (round >= maxRound) {
+          maxRound += 4;
+          changeTimerInterface("longBreak");
+        } else {
+          changeTimerInterface("shortBreak");
+        }
+      } else {
+        changeTimerInterface("pomodoro");
+      }
     }
-
-    timerEl.innerHTML = `${min}:${sec}`;
-    definedTime--;
   };
 
   timerIsRunning = true;
@@ -41,31 +91,14 @@ const startTimer = function () {
   return timer;
 };
 
-const changeTimerInterface = function (id) {
-  const timerSetting = timersSettings.find((obj) => obj.id === id);
-  definedTime = timerSetting.time;
-  const min = String(Math.trunc(definedTime / 60)).padStart(2, 0);
-  const sec = String(Math.trunc(definedTime % 60)).padStart(2, 0);
-  timerEl.innerHTML = `${min}:${sec}`;
-  container.classList.add(timerSetting.classe);
-};
-
-const resetTimer = function () {
-  clearInterval(currentTimer);
-  timerIsRunning = false;
-  playPause.innerHTML = "PLAY";
-  container.classList.remove("red", "green", "blue");
-  optionBtns.forEach((btn) => btn.classList.remove("active-option-btn"));
-};
-
 // Event handlers
 
 playPause.addEventListener("click", function () {
   if (!timerIsRunning) {
-    currentTimer = startTimer();
+    currentTimerInterval = startTimer();
     playPause.innerHTML = "PAUSE";
   } else {
-    clearInterval(currentTimer);
+    clearInterval(currentTimerInterval);
     timerIsRunning = false;
     playPause.innerHTML = "PLAY";
   }
