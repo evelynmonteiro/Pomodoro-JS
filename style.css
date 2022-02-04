@@ -13,6 +13,7 @@
   --very-dark-blue: hsl(235, 35%, 13%);
   --blue-gray: hsl(236, 15%, 60%);
   --light-blue-gray: hsl(236, 46%, 93%);
+  --pink: hsl(300, 82%, 78%);
   --theme-color: hsl(0, 84%, 68%);
 }
 
@@ -125,6 +126,111 @@ body {
 
 #config img {
   width: 24px;
+}
+
+/* MODAL */
+
+.hidden {
+  display: none;
+}
+
+.settings-modal {
+  max-width: 450px;
+  padding: 1.5rem 1.5rem 3rem 1.5rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 24px;
+  color: var(--dark-blue);
+  z-index: 10;
+}
+
+.settings-modal .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.settings-modal .header #closeBtn {
+  padding: 0.25rem;
+  background-color: transparent;
+  border: none;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--blue-gray);
+  cursor: pointer;
+}
+
+.settings-modal h4 {
+  margin-bottom: 0.75rem;
+}
+
+.settings-modal form {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.settings-modal form .input-container {
+  width: 33.3%;
+}
+
+.settings-modal form label {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--blue-gray);
+}
+
+.settings-modal form input {
+  max-width: 95%;
+  padding: 0.5rem;
+  height: 42px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--light-blue-gray);
+  font-weight: bold;
+  color: var(--dark-blue);
+}
+
+.settings-modal form input:focus {
+  outline: 1px solid var(--blue-gray);
+}
+
+.settings-modal #apply {
+  position: absolute;
+  bottom: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--pink);
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  z-index: 5;
+}
+
+@media (max-width: 480px) {
+  .settings-modal {
+    width: 90%;
+  }
+  .settings-modal form label {
+    font-size: 0.5rem;
+  }
 }
 
 @media (max-width: 350px) {
