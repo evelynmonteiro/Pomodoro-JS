@@ -54,10 +54,13 @@ const updateTimerEl = function () {
   timerEl.innerHTML = `${min}:${sec}`;
 };
 
-const init = function () {
+const getSettingsStored = function () {
   const timersSettingsStored = JSON.parse(
     localStorage.getItem("timersSettings")
   );
+
+  if (!timersSettingsStored) return;
+
   timersSettings.pomodoro.time = timersSettingsStored.pomodoro.time;
   timersSettings.shortBreak.time = timersSettingsStored.shortBreak.time;
   timersSettings.longBreak.time = timersSettingsStored.longBreak.time;
@@ -65,7 +68,10 @@ const init = function () {
   pomodoroInput.value = timersSettings.pomodoro.time / 60;
   shortBreakInput.value = timersSettings.shortBreak.time / 60;
   longBreakInput.value = timersSettings.longBreak.time / 60;
+};
 
+const init = function () {
+  getSettingsStored();
   currentTimerSetting = timersSettings.pomodoro;
   definedTime = currentTimerSetting.time;
   updateTimerEl();
